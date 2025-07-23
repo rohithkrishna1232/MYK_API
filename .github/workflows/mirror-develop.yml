@@ -29,7 +29,7 @@ jobs:
       - name: Checkout target repo (Repo B)
         uses: actions/checkout@v4
         with:
-          repository: my-org/repo-b # ← your org/repo
+          repository: rohithkrishna1232/MYK_API # ← your org/repo
           token: ${{ secrets.REPO_B_PAT }}
           path: repo-b
           fetch-depth: 0
