@@ -28,7 +28,7 @@ jobs:
       - name: Checkout target repo (Repo B)
         uses: actions/checkout@v4
         with:
-          repository: my-org/repo-b # ← replace with your org/repo name
+          repository: rohithkrishna1232/test # ← replace with your org/repo name
           token: ${{ secrets.REPO_B_PAT }}
           path: repo-b
           fetch-depth: 0
