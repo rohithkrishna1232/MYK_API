@@ -45,3 +45,4 @@ jobs:
           git reset --hard "${{ github.event.after }}"
           # push it back
           git push origin develop --force
+      # 5. Clean up
