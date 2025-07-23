@@ -1,3 +1,4 @@
+# .github/workflows/mirror-develop.yml
 name: Mirror develop → Repo B
 
 on:
@@ -24,19 +25,23 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 3. Checkout target repo (Repo B) in a subfolder
+      # 3. Checkout target repo (Repo B) on its develop branch
       - name: Checkout target repo (Repo B)
         uses: actions/checkout@v4
         with:
-          repository: rohithkrishna1232/test # ← replace with your org/repo name
+          repository: my-org/repo-b # ← your org/repo
           token: ${{ secrets.REPO_B_PAT }}
           path: repo-b
           fetch-depth: 0
+          ref: develop # ← force checkout of develop
 
       # 4. Fast-forward develop in Repo B to match Repo A
       - name: Mirror develop branch
         working-directory: repo-b
         run: |
-          git checkout develop || git checkout -b develop
+          # ensure we're on develop
+          git checkout develop
+          # reset to the exact commit just pushed to Repo A
           git reset --hard "${{ github.event.after }}"
+          # push it back
           git push origin develop --force
