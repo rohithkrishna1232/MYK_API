@@ -1,0 +1,42 @@
+name: Mirror develop → Repo B
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  sync-develop:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Checkout source repo (Repo A)
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Configure Git identity for the push
+      - name: Configure Git user
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # 3. Checkout target repo (Repo B) in a subfolder
+      - name: Checkout target repo (Repo B)
+        uses: actions/checkout@v4
+        with:
+          repository: my-org/repo-b # ← replace with your org/repo name
+          token: ${{ secrets.REPO_B_PAT }}
+          path: repo-b
+          fetch-depth: 0
+
+      # 4. Fast-forward develop in Repo B to match Repo A
+      - name: Mirror develop branch
+        working-directory: repo-b
+        run: |
+          git checkout develop || git checkout -b develop
+          git reset --hard "${{ github.event.after }}"
+          git push origin develop --force
